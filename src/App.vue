@@ -18,6 +18,7 @@ export default {
     const displayedCount = ref(null);
     const isCrit = ref(false);
     let startTime = null;
+
     let animationFrameId = null;
 
     async function fetchInitialCount() {
