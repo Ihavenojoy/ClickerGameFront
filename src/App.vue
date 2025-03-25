@@ -22,26 +22,36 @@ export default {
     let animationFrameId = null;
 
     async function fetchInitialCount() {
-      const data = await getStartData(3);
-      if (data) {
-        displayedCount.value = data.Click_Value ?? 0;
-      } else {
+      try {
+        const data = await getStartData(3);
+        if (data) {
+          displayedCount.value = data.Click_Value ?? 0;
+        } else {
+          displayedCount.value = 0;
+        }
+      } catch (error) {
+        console.error("Error fetching initial count:", error);
         displayedCount.value = 0;
       }
     }
 
     async function fetchNewCount() {
-      const data = await getClickData(3);
-      if (data) {
-        if (data.Crit) {  // Only trigger animation if Crit is true
-          isCrit.value = true;
-          setTimeout(() => {
-            isCrit.value = false;
-          }, 200); // Matches animation duration
+      try {
+        const data = await getClickData(3);
+        if (data) {
+          if (data.Crit) {
+            isCrit.value = true;
+            setTimeout(() => {
+              isCrit.value = false;
+            }, 200);
+          }
+          return data.Click_Value;
         }
-        return data.Click_Value;
+        return displayedCount.value ?? 0;
+      } catch (error) {
+        console.error("Error fetching new count:", error);
+        return displayedCount.value ?? 0;
       }
-      return displayedCount.value ?? 0;
     }
 
 
