@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://localhost:8080";
+const API_BASE_URL = "https://localhost:8080/api";
 
 export async function getClickData(userid) {
     try {
