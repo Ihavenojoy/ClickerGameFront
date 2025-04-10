@@ -1,8 +1,7 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import App from './app.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from './views/Home.vue';
-import GameDefault from './views/GameDefault.vue';
+import GameDefault from '../pages/Game/GameDefault.vue';
 import { createPinia } from 'pinia';
 
 // Vue Router Setup
