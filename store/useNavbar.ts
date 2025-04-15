@@ -5,22 +5,19 @@ export const useNavbar = () => {
     const router = useRouter();
 
 
-
     const navigationItems = ref([
-        { to: ('/'), label: ('Home') },
-        { to: ('/product/dashboard'), label: ('Products') },
-        { to: ('/quotations/dashboard'), label: ('Quotations') },
+        { to: ('/game/gamedefault'), label: ('game') },
+        { to: ('/uploadimage'), label: ('image') },
     ]);
 
+
     const signIn = () => {
-        //signIn function
+        router.push('/');
     };
 
     const signOut = () => {
-        //signOut function
+        router.push('/');
     };
-
-
 
     return {
         navigationItems,

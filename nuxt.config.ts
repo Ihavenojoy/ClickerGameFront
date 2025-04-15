@@ -1,23 +1,39 @@
-import { readFileSync } from 'fs';
-import { defineNuxtConfig } from 'nuxt/config';
+import {defineNuxtConfig} from 'nuxt/config';
+import fs from 'fs'
 
 export default defineNuxtConfig({
     css: [
-        'vuetify/lib/styles/main.css',
+        'bootstrap/dist/css/bootstrap.min.css'
     ],
 
-    build: {
-        transpile: ['vuetify'], // Make sure Vuetify is transpiled by Nuxt
+    ssr: false,
+
+    modules: [
+        'vuetify-nuxt-module',
+        '@nuxt/image',
+        '@nuxt/icon',
+        '@pinia/nuxt',
+        'pinia-plugin-persistedstate/nuxt',
+    ],
+
+    vuetify: {
+        // Vuetify-specific options
+        vuetifyOptions: {
+            // Add your Vuetify options here
+        }
     },
 
-    vite: {
-        server: {
-            https: {
-                key: readFileSync('./cert/localhost-key.pem'),  // Path to your private key
-                cert: readFileSync('./cert/localhost.pem'),     // Path to your certificate
-            },
-            port: 3000,
-            host: 'localhost',
-        },
+    icon: {
+        serverBundle: {
+            collections: ['uil', 'mdi'] // <!--- this
+        }
     },
+
+
+
+    build: {
+        transpile: ['vuetify', 'vue-i18n'],
+    },
+
+    compatibilityDate: '2025-03-28',
 });

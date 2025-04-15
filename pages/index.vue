@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import { navigateTo } from '#app'
 onMounted(() => {
   setTimeout(() => {
-    navigateTo('/Game/GameDefault')
+    navigateTo('/game/GameDefault')
   }, 1000) // Optional delay to show the spinner (1 second)
 })
 </script>

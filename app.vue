@@ -1,10 +1,11 @@
 <template>
   <NuxtLayout>
     <v-app>
-      <NavBar />
+      <NavBar/>
       <v-main class="ma-2">
-        <NuxtPage />
+        <NuxtPage/>
       </v-main>
+      <Toast/>
     </v-app>
   </NuxtLayout>
 </template>
@@ -12,6 +13,8 @@
 <script setup lang="ts">
 import 'vue3-toastify/dist/index.css';
 
+import NavBar from '~/components/layout/NavBar.vue';
+import Toast from "~/components/Toast.vue";
 
 useHead({
   meta: [{
