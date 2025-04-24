@@ -1,0 +1,12 @@
+@keyframes critAnimation {
+  0% { transform: scale(1.3) rotate(-25deg); }
+  50% { transform: scale(0.8) rotate(25deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.critEffect {
+  animation: critAnimation 0.2s ease-in-out;
+}
+.critText {
+  color: red;
+}

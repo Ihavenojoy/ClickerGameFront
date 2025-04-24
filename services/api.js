@@ -2,7 +2,7 @@ const API_BASE_URL = "https://localhost:8080/api";
 
 export async function getClickData(userid) {
     try {
-        const response = await fetch(`${API_BASE_URL}/click?userid=${userid}`);
+        const response = await fetch(`${API_BASE_URL}/click/${userid}`);
         if (!response.ok) throw new Error("Failed to fetch data");
         return await response.json();
     } catch (error) {
@@ -12,7 +12,7 @@ export async function getClickData(userid) {
 }
 export async function getStartData(userid) {
     try {
-        const response = await fetch(`${API_BASE_URL}/start?userid=${userid}`);
+        const response = await fetch(`${API_BASE_URL}/click/${userid}`);
         if (!response.ok) throw new Error("Failed to fetch data");
         return await response.json();
     } catch (error) {
