@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue';
 
-const IMAGE_BASE_URL = "https://localhost:8080/image";
+const IMAGE_BASE_URL = "http://localhost:8080/image";
 
 // Reactive state
 const imageUrl = ref<string | null>(null);
@@ -27,7 +27,7 @@ export function useUserImage() {
     };
 }
 
-// 🔁 Load an image for a user (MinIO -> byte[] -> blob)
+//  Load an image for a user (MinIO -> byte[] -> blob)
 async function loadImage(userId: number, filename: string): Promise<void> {
     loading.value = true;
     error.value = null;
@@ -63,7 +63,7 @@ async function loadImage(userId: number, filename: string): Promise<void> {
     }
 }
 
-// 🟦 Upload file associated with a user
+//  Upload file associated with a user
 async function useruploadFile(userId: number, file: File, filename: string): Promise<void> {
     const formData = new FormData();
     formData.append('file', file);
@@ -86,7 +86,7 @@ async function useruploadFile(userId: number, file: File, filename: string): Pro
     }
 }
 
-// 🟨 Upload generic file (non-user-specific)
+//  Upload generic file (non-user-specific)
 async function uploadFile(): Promise<void> {
     const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
     const filename = (document.getElementById('filename') as HTMLInputElement).value;
@@ -118,7 +118,7 @@ async function uploadFile(): Promise<void> {
     }
 }
 
-// 🧩 File upload handler using Refs (e.g., for Vue inputs)
+//  File upload handler using Refs (e.g., for Vue inputs)
 const handleuserUpload = async (
     userId: number,
     fileInput: Ref<HTMLInputElement | null>,
@@ -178,13 +178,13 @@ async function loadUserImages(userId: number): Promise<void> {
     }
 }
 
-// 🖼️ Function to handle image selection and update the main image URL
+//  Function to handle image selection and update the main image URL
 const handleImageSelection = (selectedImageUrl: string): void => {
     // This could be a state change or passing the selected image URL to the parent component
     imageUrls.value = [selectedImageUrl];  // Update to just the selected image for display
 };
 
-// 📦 Simple DOM-based upload handler
+//  Simple DOM-based upload handler
 const handleUpload = async (): Promise<void> => {
     const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
     const fileName = (document.getElementById('filename') as HTMLInputElement).value;

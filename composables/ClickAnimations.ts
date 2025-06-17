@@ -1,5 +1,6 @@
 import { ref, onMounted } from 'vue';
 import { getClickData, getStartData } from '~/services/api.js';
+import { usePassiveIncomeSocket } from '@/composables/usePassiveIncomeSocket';  // <-- Import WS composable
 
 export function useClickAnimation(userId: number) {
     const duration = 50;
@@ -11,10 +12,17 @@ export function useClickAnimation(userId: number) {
     async function fetchInitialCount() {
         try {
             const data = await getStartData(userId);
-            displayedCount.value = data?.Click_Value ?? 0;
+            console.log('Fetched start data:', data);
+
+            if (data && typeof data.Click_Value === 'number') {
+                displayedCount.value = data.Click_Value;
+            } else {
+                console.warn('Start data was missing Click_Value or invalid:', data);
+                displayedCount.value = 0; // Set default to avoid being stuck at null
+            }
         } catch (error) {
             console.error('Error fetching initial count:', error);
-            displayedCount.value = 0;
+            displayedCount.value = 0; // Critical to avoid infinite loading
         }
     }
 
@@ -64,13 +72,19 @@ export function useClickAnimation(userId: number) {
         animateUpdate(displayedCount.value ?? 0, newCount);
     }
 
-    onMounted(() => {
-        fetchInitialCount();
+    usePassiveIncomeSocket((newCount: number) => {
+        animateUpdate(displayedCount.value ?? 0, newCount);
+    });
+
+
+    usePassiveIncomeSocket((newCount: number) => {
+        animateUpdate(displayedCount.value ?? 0, newCount);
     });
 
     return {
         displayedCount,
         isCrit,
         fetchAndUpdate,
+        animateUpdate,
     };
 }

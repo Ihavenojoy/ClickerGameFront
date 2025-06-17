@@ -1,9 +1,10 @@
 <template>
   <div class="button-wrapper">
-    <p
-        v-if="displayedCount !== null"
-        :class="['count-text', { critText: isCrit }]">
+    <p v-if="displayedCount !== null" :class="['count-text', { critText: isCrit }]">
       Count is: {{ Math.trunc(displayedCount) }}
+    </p>
+    <p v-else>
+      Loading...
     </p>
 
     <button
@@ -48,24 +49,23 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useClickAnimation } from '@/composables/ClickAnimations';
 import { useUserImage } from '@/services/image';
+import { useClickAnimation } from '@/composables/ClickAnimations';
+import { useClickUpdate } from '@/composables/useClickUpdate';
+
 
 const userId = 3;
-const fileName = ref('Test');
+const fileName = ref('House');
 const fileInput = ref<HTMLInputElement | null>(null);
 const isModalOpen = ref(false);
 const selectedImageUrl = ref<string | null>(null);
 const selectedImageName = ref<string | null>(null);
 
-const { displayedCount, isCrit, fetchAndUpdate } = useClickAnimation(userId);
-const {
-  imageUrl,
-  loadImage,
-  loading,
-  imageUrls,
-  imageNames,
-} = useUserImage();
+const { displayedCount, isCrit, fetchAndUpdate, animateUpdate } = useClickAnimation(userId);
+const { imageUrl, loadImage, loading, imageUrls, imageNames } = useUserImage();
+const { setUpdateHandler } = useClickUpdate();
+
+
 
 // Open the modal
 const openUpdateModal = () => {
@@ -79,23 +79,25 @@ const closeModal = () => {
 
 // Handle the image selection
 const selectImage = (url: string, imageName: string) => {
-  // Store the selected image URL and name
   selectedImageUrl.value = url;
   selectedImageName.value = imageName;
 
-  // You can use this information to update your UI or send it to a parent component
   console.log("Selected Image URL:", selectedImageUrl.value);
   console.log("Selected Image Name:", selectedImageName.value);
 
-  // Close the modal after selection
   closeModal();
 };
 
-// Load the image on component mount (optional, depending on your use case)
+// Load the image on component mount
 onMounted(() => {
   loadImage(userId, fileName.value);
 });
+
+setUpdateHandler((value) => {
+  animateUpdate(displayedCount.value ?? 0, (displayedCount.value ?? 0) + value);
+});
 </script>
+
 
 <style scoped>
 /* Styling for modal */

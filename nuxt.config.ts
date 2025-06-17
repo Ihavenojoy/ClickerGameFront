@@ -1,5 +1,4 @@
-import {defineNuxtConfig} from 'nuxt/config';
-import fs from 'fs'
+import { defineNuxtConfig } from 'nuxt/config';
 
 export default defineNuxtConfig({
     css: [
@@ -7,7 +6,14 @@ export default defineNuxtConfig({
         '@/assets/css/main.scss' // your custom styles
     ],
 
-    ssr: false,
+    ssr: false, // This disables server-side rendering
+
+    vite: {
+        define: {
+            global: 'window',  // Define `global` as `window` globally for all modules
+        },
+    },
+
 
     modules: [
         'vuetify-nuxt-module',
@@ -18,7 +24,6 @@ export default defineNuxtConfig({
     ],
 
     vuetify: {
-        // Vuetify-specific options
         vuetifyOptions: {
             // Add your Vuetify options here
         }
@@ -26,15 +31,17 @@ export default defineNuxtConfig({
 
     icon: {
         serverBundle: {
-            collections: ['uil', 'mdi'] // <!--- this
+            collections: ['uil', 'mdi'] // Icon collections
         }
     },
 
-
+    plugins: [
+        { src: '~/plugins/global.js', mode: 'client' } // Load custom global plugin only on the client side
+    ],
 
     build: {
-        transpile: ['vuetify', 'vue-i18n'],
+        transpile: ['vuetify', 'vue-i18n'], // Ensure Vuetify and Vue i18n are transpiled
     },
 
-    compatibilityDate: '2025-03-28',
+    compatibilityDate: '2025-03-28', // Set compatibility date
 });
