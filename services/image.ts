@@ -23,7 +23,7 @@ export function useUserImage() {
         loadUserImages,
         handleImageSelection,
         imageNames,
-        imageUrls
+        imageUrls,
     };
 }
 
@@ -137,46 +137,19 @@ const handleuserUpload = async (
 };
 
 
-async function loadUserImages(userId: number): Promise<void> {
-    loading.value = true;
-    error.value = null;
+export async function loadUserImages(userId: number): Promise<{ name: string; imageData: string }[]> {
+    const response = await fetch(`${IMAGE_BASE_URL}/getalluserimages/${userId}`);
 
-    console.log(`Sending request to load images for user ${userId}`);  // Debugging log
-
-    try {
-        const response = await fetch(`${IMAGE_BASE_URL}/getalluserimages/${userId}`, {
-            method: 'GET',
-        });
-
-        console.log("Response received:", response);  // Debugging log
-
-        if (!response.ok) {
-            throw new Error(`Failed to load images: ${response.statusText}`);
-        }
-
-        const byteArrays: number[][] = await response.json();
-
-        // Clear any previous images
-        imageUrls.value = [];
-        imageNames.value = [];  // Clear image names as well
-
-        // Convert each byte array into a Blob URL and store the filenames
-        byteArrays.forEach((byteArray, index) => {
-            const blob = new Blob([new Uint8Array(byteArray)], { type: 'image/jpeg' });
-            const url = URL.createObjectURL(blob);
-            imageUrls.value.push(url);
-
-            // Store the filenames (for example, based on userId and index)
-            imageNames.value.push(`image-${userId}-${index}.jpg`);
-        });
-
-    } catch (err: any) {
-        console.error("Error loading images:", err);
-        error.value = err.message || "Unknown error";
-    } finally {
-        loading.value = false;
+    if (!response.ok) {
+        throw new Error(`Failed to load images: ${response.statusText}`);
     }
+
+    // Assuming backend sends: [{ name: string, imageData: string (base64) }]
+    const imagesRaw: { name: string; imageData: string }[] = await response.json();
+
+    return imagesRaw; // No parsing or conversion needed
 }
+
 
 //  Function to handle image selection and update the main image URL
 const handleImageSelection = (selectedImageUrl: string): void => {

@@ -3,59 +3,51 @@
     <p v-if="displayedCount !== null" :class="['count-text', { critText: isCrit }]">
       Count is: {{ Math.trunc(displayedCount) }}
     </p>
-    <p v-else>
-      Loading...
-    </p>
+    <p v-else>Loading...</p>
 
     <button
         class="ClickButton"
         @click="fetchAndUpdate"
         :class="{ critEffect: isCrit }"
         :style="{
-        backgroundImage: imageUrl ? `url('${imageUrl}')` : '',
-        backgroundSize: 'cover',
-        backgroundColor: !imageUrl && isCrit ? 'red' : '#f0f0f0',
-        color: imageUrl ? 'transparent' : '#000',
-      }">
+          backgroundImage: imageUrl ? `url('${imageUrl}')` : '',
+          backgroundSize: 'cover',
+          backgroundColor: !imageUrl && isCrit ? 'red' : '#f0f0f0',
+          color: imageUrl ? 'transparent' : '#000',
+        }"
+    >
       <span
           class="button-text"
           :class="{ redText: isCrit }"
-          v-if="!imageUrl">
+          v-if="!imageUrl"
+      >
         {{ displayedCount !== null ? `Count is: ${Math.trunc(displayedCount)}` : "Loading..." }}
       </span>
     </button>
 
-    <!-- Button to open the modal -->
     <button @click="openUpdateModal">Select Image</button>
 
-    <!-- Modal (Overlay) to display images -->
-    <div class="overlay" v-if="isModalOpen">
-      <div class="modal">
-        <h3>Select an Image</h3>
-        <div v-if="loading">Loading images...</div>
-        <div v-else class="image-list">
-          <div
-              v-for="(url, index) in imageUrls"
-              :key="index"
-              class="img-option">
-            <img :src="url" alt="User image" @click="selectImage(url, imageNames[index])" />
-          </div>
-        </div>
-        <button @click="closeModal" class="cancel-button">Cancel</button>
-      </div>
-    </div>
+    <!-- Use only this component as modal -->
+    <ImageSelectionModal
+        v-if="isModalOpen"
+        :user-id="userId"
+        @select="selectImage"
+        @cancel="closeModal"
+    />
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useUserImage } from '@/services/image';
 import { useClickAnimation } from '@/composables/ClickAnimations';
 import { useClickUpdate } from '@/composables/useClickUpdate';
+import ImageSelectionModal from '@/components/ImageSelector.vue';
+import { fileName } from '@/composables/useSharedFileName';
 
 
 const userId = 3;
-const fileName = ref('House');
 const fileInput = ref<HTMLInputElement | null>(null);
 const isModalOpen = ref(false);
 const selectedImageUrl = ref<string | null>(null);
@@ -91,6 +83,14 @@ const selectImage = (url: string, imageName: string) => {
 // Load the image on component mount
 onMounted(() => {
   loadImage(userId, fileName.value);
+});
+
+function updateUserImage(param: () => void) {
+  loadImage(userId, fileName.value);
+}
+
+watch(fileName, () => {
+  updateUserImage(() => {});
 });
 
 setUpdateHandler((value) => {
